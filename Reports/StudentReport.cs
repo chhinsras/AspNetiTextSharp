@@ -186,13 +186,31 @@ namespace AspNetiTextSharp.Reports
                 _pdfCell.BackgroundColor = BaseColor.White;
                 _pdfTable.AddCell(_pdfCell);
 
-                _pdfCell = new PdfPCell(new Phrase(student.Name, _fontStyle));
+                
+                // Registering KHmer Font
+                string path = _webHostEnviroment.WebRootPath + "/fonts";
+                string khmerFontPath = Path.Combine(path, "Khmer Sangam MN.ttf", BaseFont.IDENTITY_H);
+                string englishFontPath = Path.Combine(path, "Tahoma.ttf", BaseFont.IDENTITY_H);
+
+                FontFactory.Register(khmerFontPath);
+                Font khmerFont = FontFactory.GetFont("Khmer Sangam MN", BaseFont.IDENTITY_H);
+                
+                FontFactory.Register(englishFontPath);
+                Font englishFont = FontFactory.GetFont("Tahoma", BaseFont.IDENTITY_H);
+                
+                FontSelector fontSelector = new FontSelector();
+                fontSelector.AddFont(khmerFont);
+                fontSelector.AddFont(englishFont);
+            
+
+                // var phrase = fontSelector.Process(student.Name);
+                _pdfCell = new PdfPCell(new Phrase(fontSelector.Process(student.Name)));
                 _pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 _pdfCell.BackgroundColor = BaseColor.White;
                 _pdfTable.AddCell(_pdfCell);
 
-                _pdfCell = new PdfPCell(new Phrase(student.Address, _fontStyle));
+                _pdfCell = new PdfPCell(new Phrase(student.Address, this.GetFont("Khmer Sangam MN.ttf", 28)));
                 _pdfCell.HorizontalAlignment = Element.ALIGN_CENTER;
                 _pdfCell.VerticalAlignment = Element.ALIGN_MIDDLE;
                 _pdfCell.BackgroundColor = BaseColor.White;
@@ -202,6 +220,25 @@ namespace AspNetiTextSharp.Reports
             }
             #endregion
 
+        }
+    
+        private Font GetFont(string fontNameWithExtension, int fontSize = 12)
+        {
+            // string fontLocation = $"{Directory.GetCurrentDirectory()}{"/wwwwroot/fonts/" + fontNameWithExtension}";
+            string path = _webHostEnviroment.WebRootPath + "/fonts";
+            string fontPath = Path.Combine(path, fontNameWithExtension);
+
+            // FontFactory.Register(fontPath);
+            // Font f = FontFactory.GetFont(fontNameWithExtension);
+
+            
+
+            BaseFont bf = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            Font f = new Font(bf, fontSize);
+            
+
+
+            return f;
         }
     }
 }

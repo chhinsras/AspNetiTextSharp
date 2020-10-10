@@ -25,8 +25,8 @@ namespace AspNetiTextSharp.Controllers
             {
                 Student student = new Student();
                 student.Id = i;
-                student.Name = "Student " + i;
-                student.Address = "Address " + i;
+                student.Name = "Student សិស្សសាលារៀន " + i;
+                student.Address = "Address អាសយដ្ឋាន " + i;
                 students.Add(student);
             }
 
